@@ -1,77 +1,60 @@
 require 'open3'
+require_relative 'random_game_list.rb'
 
 Shoes.app do
-	@all_game_names = Dir.entries("roms")
 
-	#remove the ., .. produced by filenames
-	@all_game_names.shift
-	@all_game_names.shift
-
+	#Init setup GUI
 	@setup = stack :margin => 8 do
 
 		flow do
 			para 'Games to play: '
-			@game_count = edit_line
+			@game_count_input = edit_line
 		end
-
 		flow do
-			#does not work
 			para 'Play published games only?'
-			@play_published = check
+			@play_published_input = check
 		end
-
 		flow do
 			para '100% working ROMs only?'
-			@working_roms = check
+			@working_roms_input = check
 		end
-
 		
  		button "Roulette!" do
-			if @play_published.checked?
-				games_skipped = @all_game_names.length
-				@all_game_names.delete_if {|name| !name.include?('[!]')}
-				games_skipped -= @all_game_names.length
-				debug("Skipping #{games_skipped} unpublished games ")
-			end
-			
-			if @working_roms.checked?
-				games_skipped = @all_game_names.length
-				@all_game_names.delete_if {|name| name.include?('[b')}
-				games_skipped -= @all_game_names.length
-				debug("Skipping #{games_skipped} broken games ")
-			end
-			
-			
-			debug("Total Games: #{@all_game_names.length}")
-				
- 			@games_in_roulette = @all_game_names.sample(@game_count.text.to_i)
- 			@playing_game = 0
- 			@game_started = false
- 			@game_count_num = @game_count.text.to_i
+
+ 			#quit if number invalid
+ 			if @game_count_input.text.to_i.nil? && @game_count_input.text.to_i > 0
+ 				alert("Enter a valid number of games")
+ 				break
+ 			end
+
+ 			@game_list = RandomGameList.new("roms/nes/",@game_count_input.text.to_i,@play_published_input.checked?,@working_roms_input.checked?)			
+			@game_started = false
+
+			#main logic loop
  			every(2) do
+ 				#attempt to launch a game if one is not started
  				if @game_started == false
  					@game_started = true
- 					play(@playing_game) 
+ 					play
+ 				#otherwise monitor to see if the game is running. 
+ 				#If it's not increment the list and start the next game
  				elsif Open3.capture2e('tasklist /fi "imagename eq nestopia.exe')[0].include?("INFO")
  					@game_started = false
- 					@playing_game += 1
- 					if(@playing_game == @game_count_num)
- 						close()
- 					end
+ 					#increment game counter, close if nil
+ 					close if @game_list.next.nil?
  				end
  			end
 		end
 	end
 
-	def play(number)
-		count = number + 1
+	def play
 		@setup.clear
 		@gamedesc.clear unless @gamedesc.nil?
-		@gamedesc = stack :margin => 1 do
-			para "#{count} of #{@game_count_num}: "+ @games_in_roulette[number]
+		@gamedesc = stack do
+			para "#{@game_list.current_number} of #{@game_list.total_number}: "+ @game_list.current_game
 		end
 		timer(1) do
-			system 'Nestopia/nestopia.exe "roms/' + @games_in_roulette[number] + '"'
+			system 'Nestopia/nestopia.exe "roms/nes/' + @game_list.current_game + '"'
 		end
 	end
 end
