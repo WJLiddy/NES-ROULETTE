@@ -50,7 +50,7 @@ Shoes.app do
 		@state = :game_closed
 
     # main logic loop
-  	every(2) do
+  	every(3) do
 
       if @state == :game_running
         @state = :game_closed if !game_is_running
@@ -83,7 +83,7 @@ Shoes.app do
       para "Now playing"
       para "#{@current_game.emulator.system_name}: #{@current_game.name}"
     end
-    timer(1) do
+    timer(5) do
       command = @current_game.emulator.exe_path + ' "' + @current_game.emulator.roms_dir + @current_game.name + '"' 
       debug(command)
       system command
