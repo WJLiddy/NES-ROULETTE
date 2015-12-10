@@ -1,4 +1,6 @@
 class Game
+
+  attr_reader :name,:emulator
   
   def initialize(name,emulator)
     @name = name
@@ -9,12 +11,12 @@ class Game
   def Game.random_list(emulators,count)
     eligible_games = []
     #Make a big list of all eligible games.
-    emulators.each |emulator| do
-      e.all_games |gamename| do
-        eligible_games << Game.new(gamename,emulator)
-      end
+    emulators.each do |emulator|
+        eligible_games << emulator.all_games
     end
-    eligible_games.sample(game_count)
+    
+    debug('Total Games:')
+    eligible_games.flatten.sample(count)
   end
  
 end
