@@ -1,2 +1,3 @@
 NES emulators/Nestopia/nestopia.exe roms/nes/
 SNES emulators/ZSNES/zsnesw.exe roms/snes/
+Genesis emulators/Fusion/Fusion.exe roms/genesis/
