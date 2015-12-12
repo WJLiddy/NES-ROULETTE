@@ -31,16 +31,19 @@ class Spinner
 
   def update
     if(@spintime > 0)
-      @spintime -= 1
-      @ptr = ((@ptr+1) % @size)
-      if(@spintime == 0)
+      old_spin_time = @spintime
+      @spintime -= (0.04 + [(@spintime/50), 0.7].min)
+      if(old_spin_time.floor != @spintime.floor)
+        @ptr = ((@ptr+1) % @size)
+      end
+      if(@spintime <= 0)
         @consumable = true
       end
     end
   end
 
   def done_spinning
-    @spintime == 0
+    @spintime <= 0
   end
 
   def text

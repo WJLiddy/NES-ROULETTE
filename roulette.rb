@@ -92,24 +92,25 @@ Shoes.app(title: "Roulette",
     # Instaniate the spinner, spin it.
     if @spinner.nil?
       @spinner = Spinner.new(@game_list,SPINNER_SIZE)
-      @spinner.spin(50)
+      @spinner.spin(20 + rand(20))
       animate(20) do |frame|
         @spinner.update
         @spinner_text.replace @spinner.text
         if(@spinner.done_spinning && @spinner.consumable)
           @current_game = @spinner.chosen_game
           update_game_desc
+          timer(3) do
+            command = @current_game.emulator.exe_path + ' "' + @current_game.emulator.roms_dir + @current_game.name + '"' 
+            debug(command)
+            system command
+            @state = :game_running
+          end
         end
       end
     end
-    @spinner.spin(50)
+    @spinner.spin(20 + rand(20))
 
-    timer(5) do
-      command = @current_game.emulator.exe_path + ' "' + @current_game.emulator.roms_dir + @current_game.name + '"' 
-      debug(command)
-      system command
-      @state = :game_running
-    end
+
   end
 
   def draw_game_desc
