@@ -52,7 +52,7 @@ Shoes.app(title: "Roulette",
 
     #Do not play on systems that are not included.
     @emulators_skip.each_with_index{ |e,i| @emulators[i] = nil if e.checked? }
-    @emulators.compact
+    @emulators.compact!
     
   	@game_list = Game.random_list(@emulators,SPINNER_SIZE + (@game_count.text.to_i))			 
 		@state = :game_closed
