@@ -1,8 +1,9 @@
 # NES-ROULETTE
-Short ruby program that launches NES roms via Nestopia in random order. For windows only, but linux soon.
+Randomly picks ROMS for you to play. Windows only.
+Works with Nestopia, Zsnesw, Fusion (Genesis emulator), Ootake (Turbogfx Emulator), VisualBoyAdvance.
 
-To build:
-You need ruby, shoes (the GUI toolkit), Nestopia, and some roms.
-Put the Nestopia folder in the same directory as the program.
-Put legally owned and/or freeware roms in a "/roms" directory. They should be named using the GoodTools convention.
-Run the program: "shoes NES-ROULETTE.rb"
+# Setup
+Step 1. Get emulators. The config file tells you where to put the executables.
+Step 2. Get roms. Legally, please. The config file tells you where to put the roms/ folder for each emulator.
+Step 3. Install Ruby, and shoes. Here is a tutorial: http://shoesrb.com/manual/Installing.html
+Step 4. Run run.rb
